@@ -18,6 +18,10 @@ app.get('/api2', UsController.scrapData2);
 //http://localhost:5000/api3?parcel_id=00424435050000580
 app.get('/api3', UsController.scrapData3);
 
+//http://localhost:5000/api3?parcel_id=00424435050000580
+app.get('/broward/api3', UsController.scrapData3broward);
+
+
 
 //http://localhost:5000/api3?parcel_id=00424435050000580
 app.post('/api4', UsController.scrapData4);
