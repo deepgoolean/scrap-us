@@ -336,7 +336,9 @@ const scrapData2 = async (req, res) => {
   
 
 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        headless: 'new',
+      });
     const page = await browser.newPage();
 
     await page.goto(url, {waitUntil: 'load', timeout: 600000});
