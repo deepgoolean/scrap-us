@@ -137,6 +137,86 @@ const scrapData3 = async (req, res) => {
   
 }
 
+
+const scrapData3broward = async (req, res) => {
+
+  try {
+      const url = req.query.url || "https://www.pbcgov.org/papa/Asps/PropertyDetail/PropertyDetail.aspx?parcel=" + req.query.parcel_id;
+      console.log('Crowl '+ url);
+  
+      const { data } = await axios.get(url, { httpsAgent });
+      const $ = cheerio.load(data);
+
+
+      console.log('API 3', $('#propertyDetailDiv'));
+
+      const propertyDetailDiv = $('#propertyDetailDiv');
+      const ownerInformationDiv = $('#ownerInformationDiv');
+      const salesInformationDiv = $("#salesInformationDiv");
+      const exemptionInformationDiv = $("#exemptionInformationDiv");
+      const propertyInformationDiv = $("#propertyInformationDiv");
+      const appraisalsDiv = $("#appraisalsDiv");
+      const assessedValuesDiv = $("#assessedValuesDiv");
+      const taxesDiv = $("#taxesDiv");
+      // let dataObj = [];
+
+
+
+
+      const itemData = {count_of_total_auction: "",count_of_active_auction: "",day_of_auction_date_format: "",date_of_auction: "",auction_type: "",case_number: "",final_judgment_amount: "",parcel_id: "",property_address: "",adlbl: "",plaintiff_max_bid: "",no_r_or_w_cases: "",location_address: "",municipality: "",parcel_control_number: "",subdivision: "",official_records_bookpage: "",sale_date: "",legal_description: "",owner_information: "",mailing_address: "",exception_info: "",sales_date: "",price: "",or_bookpage: "",sale_type: "",owner: "",no_sales_information: "",improvement_value: "",land_value: "",total_market_value: "",assessed_value: "",exemption_amount: "",taxable_value: "",ad_valorem: "",non_ad_valorem: "",total_tax: ""}
+
+
+      itemData.location_address = $(propertyDetailDiv).find('#MainContent_lblLocation').text().replace('\n', '');
+      itemData.municipality = $(propertyDetailDiv).find('#MainContent_lblMunicipality').text().replace('\n', '');
+      itemData.parcel_control_number = $(propertyDetailDiv).find('#MainContent_lblPCN').text().replace('\n', '');
+      itemData.subdivision = $(propertyDetailDiv).find('#MainContent_lblSubdiv').text().replace('\n', '');
+      itemData.official_records_bookpage = $(propertyDetailDiv).find('#MainContent_lblBook').text().replace('\n', '') + '/'+$(propertyDetailDiv).find('#MainContent_lblPage').text().replace('\n', '');
+      itemData.sale_date = $(propertyDetailDiv).find('#MainContent_lblSaleDate').text().replace('\n', '');
+      itemData.legal_description = $(propertyDetailDiv).find('#MainContent_lblLegalDesc').text().replace('\n', '').replace(' ', '').replace(' ', '').replace(' ', '');
+
+      
+      itemData.owner_information = $(ownerInformationDiv).find('table tbody tr').eq(1).find('td table tbody tr').eq(1).text();
+
+      itemData.mailing_address = $(ownerInformationDiv).find('#MainContent_lblAddrLine1').text() + ' '+ $(ownerInformationDiv).find('#MainContent_lblAddrLine3').text();
+
+      itemData.sales_date = $(salesInformationDiv).find('#MainContent_gvSalesInfo tbody tr').eq(1).find('td').eq(0).text().replace('\n', '');
+      itemData.price = $(salesInformationDiv).find('#MainContent_gvSalesInfo tbody tr').eq(1).find('td').eq(1).text().replace('\n', '');
+
+      itemData.or_bookpage = $(salesInformationDiv).find('#MainContent_gvSalesInfo_lnkbookpg_0').text().replace('\n', '').replace(' ', '');
+
+      itemData.sale_type = $(salesInformationDiv).find('#MainContent_gvSalesInfo_lblSaleType_0').text().replace('\n', '');
+
+      itemData.owner = $(salesInformationDiv).find('#MainContent_gvSalesInfo tbody tr').eq(1).find('td').eq(4).text().replace('\n', '');
+
+
+
+      itemData.improvement_value = $(appraisalsDiv).find('#MainContent_lblImpValue1').text().replace('\n', '');
+      itemData.land_value = $(appraisalsDiv).find('#MainContent_lblLandValue1').text().replace('\n', '');
+      itemData.total_market_value = $(appraisalsDiv).find('#MainContent_lblMarketValue1').text().replace('\n', '');
+      itemData.assessed_value = $(assessedValuesDiv).find('#MainContent_lblAssessedValue1').text().replace('\n', '');
+      itemData.exemption_amount = $(assessedValuesDiv).find('#MainContent_lblExemptionAmt1').text().replace('\n', '');
+      itemData.taxable_value = $(assessedValuesDiv).find('#MainContent_lblTaxableValue1').text().replace('\n', '');
+      itemData.ad_valorem = $(taxesDiv).find('#MainContent_lblAdValorem1').text().replace('\n', '');
+      itemData.non_ad_valorem = $(taxesDiv).find('#MainContent_lblNonAdValorem1').text().replace('\n', '');
+      itemData.total_tax = $(taxesDiv).find('#MainContent_lblTaxes1').text().replace('\n', '');
+
+
+      res.send(itemData);
+  
+    } catch (err) {
+      res.send({
+          'err':err
+      });
+    }
+
+  
+}
+
+
+
+
+
+
 const scrapData4 = async (req, res) => {
 
   try {
@@ -605,7 +685,8 @@ const UsController = {
     scrapData,
     scrapData2,
     scrapData3,
-    scrapData4
+    scrapData4,
+  scrapData3broward
 }
 
 export default UsController;
