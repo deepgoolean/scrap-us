@@ -321,6 +321,8 @@ const scrapData2 = async (req, res) => {
   const currentDate = new Date();
   const timestamp = currentDate.getTime();
 
+  res.send({time:timestamp});
+
   try {
     const url = req.query.url || "https://palmbeach.realforeclose.com/index.cfm?zaction=AUCTION&Zmethod=PREVIEW&AUCTIONDATE="+req.query.date;
 
